@@ -2,8 +2,12 @@
 
 class Public::SessionsController < Devise::SessionsController
   #before_action :configure_sign_in_params, only: [:create]
-  before_action :customer_state, only: [:create]
-  @customer.valid_password?(params[:customer][:password])
+
+  def after_sign_in_path_for(resource)
+    public_items_path
+  end
+  
+  protected
 
   # GET /resource/sign_in
   # def new
@@ -26,19 +30,5 @@ class Public::SessionsController < Devise::SessionsController
   # def configure_sign_in_params
   #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
   # end
-  protected
 
-  def customer_state
-    # 退会しているかを判断するメソッド
-    @customer = Customer.find_by(email: params[:customer][:email])
-    ## 入力されたemailからアカウントを1件取得
-    return if !@customer
-    ## アカウントを取得できなかった場合、このメソッドを終了する
-    if @customer.valid_password?(params[:customer][:password])
-    ## 取得したアカウントのパスワードと入力されたパスワードが一致してるかを判別
-      if true && !true
-        render "new_customer_registration"
-      end
-    end
-  end
 end
